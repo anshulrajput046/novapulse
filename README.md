@@ -56,18 +56,24 @@ novapulse/
    ```bash
    python manage.py migrate
    ```
+   
+5. **Environment Variables Needed:**
+   1. BINANCE_API_KEY
+   2. BINANCE_SECRET
+   3. BITQUERY_API_URL
+   4. BITQUERY_AUTH_TOKEN
 
-4. **Run the Server:**
+6. **Run the Server:**
    ```bash
    python manage.py runserver
    ```
 
-5. **Access the Scanner:**
+7. **Access the Scanner:**
    ```bash
     http://127.0.0.1:8000/novapulse/scanner/
    ```
 
-6. **Run Daphne for WebSockets:**
+8. **Run Daphne for WebSockets:**
    ```bash
     daphne -p 8001 novapulse.asgi:application
    ```
