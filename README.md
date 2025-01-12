@@ -59,10 +59,10 @@ novapulse/
    
 5. **Environment Variables Needed:**
   ```bash
-   1. BINANCE_API_KEY
-   2. BINANCE_SECRET
-   3. BITQUERY_API_URL
-   4. BITQUERY_AUTH_TOKEN
+      1. BINANCE_API_KEY
+      2. BINANCE_SECRET
+      3. BITQUERY_API_URL
+      4. BITQUERY_AUTH_TOKEN
   ```
 
 7. **Run the Server:**
