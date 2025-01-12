@@ -31,6 +31,8 @@ novapulse/
 - No specific frontend framework is detected, suggesting the project primarily focuses on serving APIs or WebSocket feeds. If a frontend is present, it is likely implemented through Django templates or managed as a separate UI service.
 - The frontend includes a refresh feature that, when clicked, updates the data according to the live feed.
 - The frontend could be enhanced by utilizing a Daphne server with WebSocket support, enabling automatic data pushes to the frontend instead of relying on manual refreshes.
+- ![image](https://github.com/user-attachments/assets/a82ee5fe-3d1d-4fa6-a064-efbc2fc7001c)
+
 ## WebSocket Feed
 
 - **Server**: Daphne (ASGI server)
