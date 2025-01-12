@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbitrage Opportunities</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #FFFFFF;
+        }
+        h1 {
+            text-align: center;
+            color: #FFA500;
+            margin: 20px 0;
+        }
+        .table-container {
+            width: 90%;
+            margin: 0 auto;
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #1E1E1E;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #333;
+        }
+        th {
+            background-color: #333;
+            color: #FFA500;
+            cursor: pointer;
+        }
+        tr:nth-child(even) {
+            background-color: #2A2A2A;
+        }
+        tr:hover {
+            background-color: #333333;
+        }
+        .profit-positive {
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .profit-zero {
+            color: #FFA500;
+        }
+        .profit-negative {
+            color: red;
+            font-weight: bold;
+        }
+        .filter-bar {
+            width: 90%;
+            margin: 20px auto;
+            display: flex;
+            justify-content: flex-end;
+        }
+        .filter-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 300px;
+            border: 1px solid #333;
+            background-color: #1E1E1E;
+            color: #FFFFFF;
+        }
+        .refresh-button {
+            padding: 10px 20px;
+            background-color: #FFA500;
+            color: #FFFFFF;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .refresh-button:hover {
+            background-color: #FF8C00;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #FFA500;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 2s linear infinite;
+            margin-right: 10px;
+            display: none;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        td.symbol {
+            font-style: italic;
+            text-decoration: underline;
+            color: #FFA500;
+        }
+    </style>
+    <script>
+        function filterTable() {
+            const input = document.getElementById('filter-input');
+            const filter = input.value.toUpperCase();
+            const table = document.getElementById('opportunities-table');
+            const tr = table.getElementsByTagName('tr');
+
+            for (let i = 1; i < tr.length; i++) {
+                const td = tr[i].getElementsByTagName('td');
+                let show = false;
+
+                for (let j = 0; j < td.length; j++) {
+                    if (td[j] && td[j].textContent.toUpperCase().indexOf(filter) > -1) {
+                        show = true;
+                        break;
+                    }
+                }
+
+                tr[i].style.display = show ? '' : 'none';
+            }
+        }
+
+        function refreshPage() {
+            // Show loader and hide the button text
+            document.getElementById("loader").style.display = "inline-block";
+            document.getElementById("refresh-text").style.display = "none";
+
+            // Simulate a refresh by reloading the page after a delay
+            setTimeout(function() {
+                location.reload();
+            }, 1000); // Delay to show the loader for 1 second before refreshing
+        }
+
+        // Function to sort rows by profit value (descending)
+        function sortRowsByProfit() {
+            const table = document.getElementById("opportunities-table");
+            const rows = Array.from(table.rows).slice(1); // skip the header row
+            rows.sort((rowA, rowB) => {
+                const profitA = parseFloat(rowA.cells[3].textContent) || 0;
+                const profitB = parseFloat(rowB.cells[3].textContent) || 0;
+                return profitB - profitA; // Sort in descending order (positive profit at the top)
+            });
+
+            // Append rows back to the table in sorted order
+            rows.forEach(row => table.appendChild(row));
+        }
+
+        // Run the sorting function after the page has loaded
+        window.onload = function() {
+            sortRowsByProfit();
+        }
+    </script>
+</head>
+<body>
+
+<h1>Novapulse Arbitrage Opportunities</h1>
+
+<div class="filter-bar">
+    <input
+        type="text"
+        id="filter-input"
+        class="filter-input"
+        placeholder="Search for opportunities..."
+        onkeyup="filterTable()"
+    />
+    <button class="refresh-button" onclick="refreshPage()">
+        <div id="loader" class="loader"></div>
+        <span id="refresh-text">Refresh</span>
+    </button>
+</div>
+
+<div class="table-container">
+    <table id="opportunities-table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Binance Price</th>
+                <th>Solana Price</th>
+                <th>Profit</th>
+                <th>Direction</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for opp in opportunities %}
+                <tr>
+                    <td class="symbol">{{ opp.symbol|default:"--" }}</td>
+                    <td>{{ opp.binance_price|default:"--" }}</td>
+                    <td>{{ opp.solana_price|default:"--" }}</td>
+                    <td class="
+                        {% if opp.profit > 0 %}
+                            profit-positive
+                        {% elif opp.profit == 0 %}
+                            profit-zero
+                        {% else %}
+                            profit-negative
+                        {% endif %}
+                    ">
+                        {{ opp.profit|default:"--" }}
+                    </td>
+                    <td>{{ opp.direction|default:"--" }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align:center;">No arbitrage opportunities available</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+</body>
+</html>
