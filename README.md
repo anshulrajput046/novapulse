@@ -22,7 +22,7 @@ novapulse/
 - **Framework**: Django
 - **Purpose**: Scans financial markets for arbitrage opportunities.
 - **Core Logic**: Implemented in `apps/arbitrage_scanner`, handling real-time data processing and arbitrage detection algorithms.
-- **Database Models**: Designed to store market data, detected opportunities.
+- **Database Models**: Designed to store market data and detected opportunities.
 - **APIs**: Django REST Framework (assumed) for exposing arbitrage data and actionable insights.
 - **Logging**: Configured under the `logs/` directory for tracking system activity and errors.
 
@@ -31,7 +31,8 @@ novapulse/
 - No specific frontend framework is detected, suggesting the project primarily focuses on serving APIs or WebSocket feeds. If a frontend is present, it is likely implemented through Django templates or managed as a separate UI service.
 - The frontend includes a refresh feature that, when clicked, updates the data according to the live feed.
 - The frontend could be enhanced by utilizing a Daphne server with WebSocket support, enabling automatic data pushes to the frontend instead of relying on manual refreshes.
-- ![image](https://github.com/user-attachments/assets/a82ee5fe-3d1d-4fa6-a064-efbc2fc7001c)
+
+![image](https://github.com/user-attachments/assets/a82ee5fe-3d1d-4fa6-a064-efbc2fc7001c)
 
 ## WebSocket Feed
 
@@ -43,7 +44,7 @@ novapulse/
 
 1. **Clone the Repository:**
    ```bash
-   git clone 
+   git clone <repository_url>
    cd novapulse
    ```
 
@@ -56,35 +57,35 @@ novapulse/
    ```bash
    python manage.py migrate
    ```
-   
-5. **Environment Variables Needed:**
-  ```bash
-      1. BINANCE_API_KEY
-      2. BINANCE_SECRET
-      3. BITQUERY_API_URL
-      4. BITQUERY_AUTH_TOKEN
-  ```
 
-7. **Run the Server:**
+4. **Set Environment Variables:**
+   ```bash
+   export BINANCE_API_KEY=<your_binance_api_key>
+   export BINANCE_SECRET=<your_binance_secret>
+   export BITQUERY_API_URL=<your_bitquery_api_url>
+   export BITQUERY_AUTH_TOKEN=<your_bitquery_auth_token>
+   ```
+
+5. **Run the Server:**
    ```bash
    python manage.py runserver
    ```
 
-8. **Access the Scanner:**
-   ```bash
-    http://127.0.0.1:8000/novapulse/scanner/
+6. **Access the Scanner:**
+   ```
+   http://127.0.0.1:8000/novapulse/scanner/
    ```
 
-9. **Run Daphne for WebSockets:**
+7. **Run Daphne for WebSockets:**
    ```bash
-    daphne -p 8001 novapulse.asgi:application
+   daphne -p 8001 novapulse.asgi:application
    ```
 
 ## Notes
 
-- **WebSocket Integration**: 
+- **WebSocket Integration**:
   - The WebSocket runs on Daphne and can be integrated for live market data feeds to power arbitrage detection.
-  - Websocket patload - {"pair": ["WBTC", "WSOL"]}
+  - WebSocket payload example: `{"pair": ["WBTC", "WSOL"]}`
 - **Logs**: Application logs are stored in the `logs/` directory for monitoring and debugging.
 
 ---
